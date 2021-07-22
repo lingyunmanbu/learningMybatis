@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--configuration核心配置文件-->
+<configuration>
+<!--引入外部配置文件不用配置其属性-->
+    <properties resource="db.properties"/>
+    <settings>
+    <!--标志日志工厂实现-->
+    <!--<setting name="logImpl" value="STDOUT_LOGGING"/>-->
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias type="com.yang.pojo.User" alias="User"/>
+    <!--使用注解时使用-->
+        <package name="com.yang.pojo"/>
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+<!--每一个Mapper。xml都需要在Mybatis核心配置文件中注册-->
+    <mappers>
+        <mapper resource="com/yang/dao/UserMapper.xml"/>
+    </mappers>
+
+</configuration>

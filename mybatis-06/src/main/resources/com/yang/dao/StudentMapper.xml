@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--configuration核心配置文件-->
+<mapper namespace="com.yang.dao.StudentMapper">
+<!--思路：
+        1.查询所有的学生信息
+        2.根据查询出来的tid,寻找对应的老师-->
+    <select id="getStudent" resultMap="studentteacher">
+        select * from student
+    </select>
+    <resultMap id="studentteacher" type="student">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <!--复杂的属性我们需要单独处理
+            对象：association
+            集合：collection-->
+        <association property="teacher" column="tid" javaType="teacher" select="getTeacher"/>
+    </resultMap>
+    <select id="getTeacher" resultType="teacher">
+        select * from teacher
+    </select>
+
+    <!--按照结果嵌套处理-->
+    <select id="getStudent2" resultMap="studentteacher2">
+        select s.id sid,s.name sname,t.name tname from student s,teacher t where s.tid=t.id
+    </select>
+    <resultMap id="studentteacher2" type="student">
+        <result column="sid" property="id"/>
+        <result column="sname" property="name"/>
+        <association property="teacher" javaType="teacher">
+            <result column="tname" property="teacher.name"/>
+        </association>
+    </resultMap>
+</mapper>

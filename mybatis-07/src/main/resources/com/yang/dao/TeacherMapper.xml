@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yang.dao.TeacherMapper">
+    <select id="getTeacher" resultType="teacher">
+        select * from teacher
+    </select>
+
+    <select id="getTeacher1" parameterType="int" resultMap="teacherstudent">
+        select s.id sid,s.name sname,t.id tid,t.name tname
+        from student s,teacher t
+        where s.tid= t.id and t.id = #{tid}
+    </select>
+    <resultMap id="teacherstudent" type="teacher">
+        <result property="id" column="tid"/>
+        <result property="name" column="tname"/>
+        <!--javaType=""指定属性的类型
+        指定泛型中的信息，我们使用oftype获取-->
+        <collection property="students" ofType="student">
+            <result property="id" column="sid"/>
+            <result property="name" column="sname"/>
+        </collection>
+    </resultMap>
+<!--    ================================================================-->
+    <select id="getTeacher2" parameterType="int" resultMap="teacherstudent2">
+        select * from teacher where id = #{tid}
+    </select>
+    <resultMap id="teacherstudent2" type="teacher">
+        <collection property="students" javaType="ArrayList" ofType="Student" select="getStudentByTeacherID" column="id"/>
+    </resultMap>
+    <select id="getStudentByTeacherID" resultType="student">
+        select * from student where tid = #{tid}
+    </select>
+</mapper>
